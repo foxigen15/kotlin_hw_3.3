@@ -21,7 +21,8 @@ fun main() {
     chatService.createMessage(ownerId, recipientId, "LKADKLASDFKLAJD")
 //    chatService.createMessage(ownerId+1, recipientId, text + 3)
 
-    chatService.test(2)
+    println(chatService.editMessage(2, "New text"))
 
+    println(chatService.getListOfChats(1))
 
 }

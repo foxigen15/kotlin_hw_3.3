@@ -72,7 +72,12 @@ class ChatService {
 
     fun editMessage(messageId: Int, text: String): Boolean {
         val (chat, message) = chats.findMessageById(messageId) ?: return false
-        val
+        val newMessage = message.copy(text = text, itIsRead = true)
+        chats.remove(chat)
+        chat.messages.remove(message)
+        chat.messages.add(newMessage)
+        chats.add(chat)
+        return true
     }
 
 }
