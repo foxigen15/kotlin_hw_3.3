@@ -13,11 +13,17 @@ class ChatService {
         return chat
     }
 
-    private fun deleteChat (chatId:Int): Boolean {
-        val chat = chats.firstOrNull {it.chatId == chatId} ?: throw ChatNotFoundException ("chat does not exist")
+    private fun deleteChat(chatId: Int): Boolean {
+        val chat = chats.firstOrNull { it.chatId == chatId } ?: throw ChatNotFoundException("chat does not exist")
         chats.remove(chat)
-        return  true
+        return true
     }
+
+    private fun getListOfChats(ownerId: Int): MutableList<Chat> =
+        chats.asSequence()
+            .filter { it.ownerId == ownerId }
+            .ifEmpty { throw ChatNotFoundException ("chats does not exist") }
+            .toMutableList()
 
 
     private fun createMessage(ownerId: Int, recipientId: Int, text: String): Boolean {
