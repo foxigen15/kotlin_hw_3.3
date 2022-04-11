@@ -6,14 +6,21 @@ class ChatService {
     private var chatId = 0
 
 
-    fun createChat(ownerId: Int, recipientId: Int): Chat {
+    private fun createChat(ownerId: Int, recipientId: Int): Chat {
         chatId += 1
         val chat = Chat(ownerId = ownerId, recipientId = recipientId, chatId = chatId)
         chats.add(chat)
         return chat
     }
 
-    fun createMessage(ownerId: Int, recipientId: Int, text: String): Boolean {
+    private fun deleteChat (chatId:Int): Boolean {
+        val chat = chats.firstOrNull {it.chatId == chatId} ?: throw ChatNotFoundException ("chat does not exist")
+        chats.remove(chat)
+        return  true
+    }
+
+
+    private fun createMessage(ownerId: Int, recipientId: Int, text: String): Boolean {
         messageId += 1
         val chat =
             chats.firstOrNull { it.ownerId == ownerId && it.recipientId == recipientId || it.ownerId == recipientId && it.recipientId == ownerId }
