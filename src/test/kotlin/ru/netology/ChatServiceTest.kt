@@ -106,4 +106,68 @@ class ChatServiceTest {
         service.editMessage(messageId = messageId, text = text2)
 
     }
+
+    @Test
+    fun deleteMessage() {
+        val ownerId = 1
+        val recipientId = 2
+        val text = "Some text"
+        val messageId = 1
+
+        val service = ChatService()
+        service.createMessage(ownerId = ownerId, recipientId = recipientId, text = text)
+
+        val result = service.deleteMessage(messageId)
+
+        assertTrue(result)
+    }
+
+    @Test(expected = NotFoundException::class)
+    fun deleteMessageNotFoundException() {
+        val ownerId = 1
+        val recipientId = 2
+        val text = "Some text"
+        val messageId = 25
+
+        val service = ChatService()
+        service.createMessage(ownerId = ownerId, recipientId = recipientId, text = text)
+
+        service.deleteMessage(messageId)
+    }
+
+    @Test
+    fun getUnreadChatsCount_userOwner() {
+        val ownerId1 = 1
+        val ownerId2 = 3
+        val recipientId1 = 2
+        val text1 = "Some text"
+        val userId = 1
+        val text2 = "Some text"
+
+        val service = ChatService()
+        service.createMessage(ownerId = ownerId1, recipientId = recipientId1, text = text1)
+        service.createMessage(ownerId = ownerId2, recipientId = recipientId1, text = text2)
+        val result = service.getUnreadChatsCount(userId = userId) == 0
+
+        assertTrue(result)
+    }
+
+    @Test
+    fun getUnreadChatsCount() {
+        val ownerId1 = 1
+        val ownerId2 = 3
+        val recipientId1 = 2
+        val text1 = "Some text"
+        val userId = 2
+        val text2 = "Some text"
+
+        val service = ChatService()
+        service.createMessage(ownerId = ownerId1, recipientId = recipientId1, text = text1)
+        service.createMessage(ownerId = ownerId2, recipientId = recipientId1, text = text2)
+        val result = service.getUnreadChatsCount(userId = userId) == 2
+
+        assertTrue(result)
+    }
+
+
 }

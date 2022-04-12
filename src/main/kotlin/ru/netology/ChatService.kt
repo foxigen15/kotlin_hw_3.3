@@ -69,7 +69,7 @@ class ChatService {
     }
 
     fun deleteMessage(messageId: Int): Boolean {
-        val (chat, message) = chats.findMessageById(messageId) ?: return false
+        val (chat, message) = chats.findMessageById(messageId) ?: throw NotFoundException("message does not exist")
         chat.messages.remove(message)
         if (chat.messages.isEmpty()) chats.remove(chat)
         return true
@@ -77,14 +77,15 @@ class ChatService {
 
     fun getUnreadChatsCount(userId: Int): Int =
         chats.asSequence()
-            .filter { userId == it.ownerId || userId == it.recipientId }
+            .filter { it.ownerId == userId || it.recipientId == userId }
             .count { chat ->
                 chat.messages
-                    .any { !it.itIsRead }
+                    .any { it.ownerId != userId && !it.itIsRead }
             }
 
+
     fun readMessage(userId: Int, messageId: Int): Boolean {
-        val (chat, message) = chats.findMessageById(messageId) ?: return false
+        val (chat, message) = chats.findMessageById(messageId) ?: throw NotFoundException("message does not exist")
         if (message.messageId == userId) {
             val newMessage = message.copy(itIsRead = true)
             chats.remove(chat)
