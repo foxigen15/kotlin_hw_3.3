@@ -25,8 +25,8 @@ class ChatService {
     }
 
     fun getListOfChats(userId: Int): MutableList<Chat> =
-        chats.asSequence()
-            .filter { it.ownerId == userId && !it.itIsDeleted || it.recipientId == userId || !it.itIsDeleted }
+        chats
+            .filter { it.ownerId == userId && !it.itIsDeleted || it.recipientId == userId && !it.itIsDeleted }
             .ifEmpty { throw ChatNotFoundException("chats does not exist") }
             .toMutableList()
 
