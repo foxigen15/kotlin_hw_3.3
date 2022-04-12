@@ -70,10 +70,25 @@ class ChatService {
         return true
     }
 
-    fun getUnreadChatsCount(userId: Int): Int {
+    fun getUnreadChatsCount(userId: Int): Int =
+        chats.asSequence()
+            .filter { userId == it.ownerId || userId == it.recipientId }
+            .count { chat ->
+                chat.messages
+                    .any { !it.itIsRead }
+            }
 
+    fun readMessage(userId: Int, messageId: Int): Boolean {
+        val (chat, message) = chats.findMessageById(messageId) ?: return false
+        if (message.messageId == userId) {
+            val newMessage = message.copy(itIsRead = true)
+            chats.remove(chat)
+            chat.messages.remove(message)
+            chat.messages.add(newMessage)
+            chats.add(chat)
+        }
+        return true
     }
-
 
 }
 
