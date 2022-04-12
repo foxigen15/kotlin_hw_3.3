@@ -16,7 +16,11 @@ class ChatService {
     fun deleteChat(chatId: Int, userId: Int): Boolean {
         val chat = chats.firstOrNull { it.chatId == chatId && it.ownerId == userId && !it.itIsDeleted }
             ?: throw ChatNotFoundException("chat does not exist")
-        chats.remove(chat)
+        if (chat.ownerId == userId) {
+            val deleteChat = chat.copy(itIsDeleted = true)
+            chats.remove(chat)
+            chats.add(deleteChat)
+        }
         return true
     }
 

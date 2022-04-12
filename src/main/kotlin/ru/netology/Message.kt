@@ -6,7 +6,7 @@ data class Message(
     val ownerId: Int,
     val recipientId: Int,
     val text: String,
-    val itIsRead: Boolean = true,
+    val itIsRead: Boolean = false,
     val itIsDelete: Boolean = false
 ) {
 }
