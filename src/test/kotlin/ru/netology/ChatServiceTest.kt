@@ -5,16 +5,6 @@ import org.junit.Test
 
 class ChatServiceTest {
 
-    @Test
-    fun createMessage() {
-        val ownerId = 1
-        val recipientId = 2
-        val text = "Some text"
-        val service = ChatService()
-        val result = service.createMessage(ownerId = ownerId, recipientId = recipientId, text = text)
-
-        assertTrue(result)
-    }
 
     @Test
     fun deleteChat() {
@@ -31,7 +21,7 @@ class ChatServiceTest {
         assertTrue(result)
     }
 
-    @Test(expected = ChatNotFoundException::class)
+    @Test(expected = NotFoundException::class)
     fun deleteChatNotfoundException() {
         val userId = 1
         val chatId = 25
@@ -58,7 +48,7 @@ class ChatServiceTest {
         assertFalse(result)
     }
 
-    @Test(expected = ChatNotFoundException::class)
+    @Test(expected = NotFoundException::class)
     fun getListOfChatsNotfoundException() {
         val userId = 25
         val ownerId1 = 1
@@ -75,4 +65,45 @@ class ChatServiceTest {
         service.getListOfChats(userId = userId)
     }
 
+    @Test
+    fun createMessage() {
+        val ownerId = 1
+        val recipientId = 2
+        val text = "Some text"
+        val service = ChatService()
+        val result = service.createMessage(ownerId = ownerId, recipientId = recipientId, text = text)
+
+        assertTrue(result)
+    }
+
+    @Test
+    fun editMessage() {
+        val ownerId = 1
+        val recipientId = 2
+        val text = "Some text"
+
+        val messageId = 1
+        val text2 = "New text"
+
+        val service = ChatService()
+        service.createMessage(ownerId = ownerId, recipientId = recipientId, text = text)
+        val result = service.editMessage(messageId = messageId, text = text2)
+
+        assertTrue(result)
+    }
+
+    @Test(expected = NotFoundException::class)
+    fun editMessageNotFound() {
+        val ownerId = 1
+        val recipientId = 2
+        val text = "Some text"
+
+        val messageId = 25
+        val text2 = "New text"
+
+        val service = ChatService()
+        service.createMessage(ownerId = ownerId, recipientId = recipientId, text = text)
+        service.editMessage(messageId = messageId, text = text2)
+
+    }
 }

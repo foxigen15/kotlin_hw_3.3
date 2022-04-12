@@ -15,7 +15,7 @@ class ChatService {
 
     fun deleteChat(chatId: Int, userId: Int): Boolean {
         val chat = chats.firstOrNull { it.chatId == chatId && it.ownerId == userId && !it.itIsDeleted }
-            ?: throw ChatNotFoundException("chat does not exist")
+            ?: throw NotFoundException("chat does not exist")
         if (chat.ownerId == userId) {
             val deleteChat = chat.copy(itIsDeleted = true)
             chats.remove(chat)
@@ -27,7 +27,7 @@ class ChatService {
     fun getListOfChats(userId: Int): MutableList<Chat> =
         chats
             .filter { it.ownerId == userId && !it.itIsDeleted || it.recipientId == userId && !it.itIsDeleted }
-            .ifEmpty { throw ChatNotFoundException("chats does not exist") }
+            .ifEmpty { throw NotFoundException("chats does not exist") }
             .toMutableList()
 
 
@@ -50,15 +50,16 @@ class ChatService {
     private fun MutableList<Chat>.findMessageById(messageId: Int): Pair<Chat, Message>? {
         forEach { chat ->
             chat.messages.forEach { message ->
-                run { message.messageId == messageId }
-                return chat to message
+                if(message.messageId == messageId) return chat to message
             }
         }
         return null
     }
 
+
+
     fun editMessage(messageId: Int, text: String): Boolean {
-        val (chat, message) = chats.findMessageById(messageId) ?: return false
+        val (chat, message) = chats.findMessageById(messageId) ?: throw NotFoundException("message does not exist")
         val newMessage = message.copy(text = text, itIsRead = true)
         chats.remove(chat)
         chat.messages.remove(message)
