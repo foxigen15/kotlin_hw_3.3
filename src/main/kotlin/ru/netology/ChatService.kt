@@ -43,31 +43,15 @@ class ChatService {
         return true
     }
 
-//    private fun MutableList<Chat>.findMessage(predicate: (Message) -> Boolean): Pair<Chat, Message>? {
-//        forEach { chat ->
-//            val tempMessage = chat.messages.find(predicate) ?: return@forEach
-//            return chat to tempMessage
-//        }
-//        return null
-//    }
-//
-//    private fun MutableList<Chat>.findMessageById(messageId: Int): Pair<Chat, Message>? = findMessage {
-//        it.messageId == messageId
-//    }
-
     private fun MutableList<Chat>.findMessageById(messageId: Int): Pair<Chat, Message>? {
         forEach { chat ->
             chat.messages.forEach { message ->
                 run { message.messageId == messageId }
                 return chat to message
-              }
+            }
         }
         return null
     }
-
-//    fun test(messageId: Int){
-//        println(chats.findMessageById2(messageId))
-//    }
 
     fun editMessage(messageId: Int, text: String): Boolean {
         val (chat, message) = chats.findMessageById(messageId) ?: return false
@@ -78,6 +62,18 @@ class ChatService {
         chats.add(chat)
         return true
     }
+
+    fun deleteMessage(messageId: Int): Boolean {
+        val (chat, message) = chats.findMessageById(messageId) ?: return false
+        chat.messages.remove(message)
+        if (chat.messages.isEmpty()) chats.remove(chat)
+        return true
+    }
+
+    fun getUnreadChatsCount(userId: Int): Int {
+
+    }
+
 
 }
 
