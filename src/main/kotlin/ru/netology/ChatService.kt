@@ -16,11 +16,9 @@ class ChatService {
     fun deleteChat(chatId: Int, userId: Int): Boolean {
         val chat = chats.firstOrNull { it.chatId == chatId && it.ownerId == userId && !it.itIsDeleted }
             ?: throw NotFoundException("chat does not exist")
-        if (chat.ownerId == userId) {
-            val deleteChat = chat.copy(itIsDeleted = true)
-            chats.remove(chat)
-            chats.add(deleteChat)
-        }
+        val deleteChat = chat.copy(itIsDeleted = true)
+        chats.remove(chat)
+        chats.add(deleteChat)
         return true
     }
 
@@ -50,12 +48,11 @@ class ChatService {
     private fun MutableList<Chat>.findMessageById(messageId: Int): Pair<Chat, Message>? {
         forEach { chat ->
             chat.messages.forEach { message ->
-                if(message.messageId == messageId) return chat to message
+                if (message.messageId == messageId) return chat to message
             }
         }
         return null
     }
-
 
 
     fun editMessage(messageId: Int, text: String): Boolean {

@@ -21,6 +21,7 @@ class ChatServiceTest {
         assertTrue(result)
     }
 
+
     @Test(expected = NotFoundException::class)
     fun deleteChatNotfoundException() {
         val userId = 1
@@ -66,7 +67,38 @@ class ChatServiceTest {
     }
 
     @Test
-    fun createMessage() {
+    fun createMessageOwnerToRecipient() {
+        val ownerId = 1
+        val recipientId = 2
+        val text = "Some text"
+        val text2 = "Some text"
+
+        val service = ChatService()
+
+        service.createMessage(ownerId = ownerId, recipientId = recipientId, text = text)
+        val result = service.createMessage(ownerId = ownerId, recipientId = recipientId, text = text2)
+
+        assertTrue(result)
+    }
+
+    @Test
+    fun createMessageRecipientToOwner() {
+        val ownerId = 1
+        val recipientId = 2
+        val text = "Some text"
+        val text2 = "Some text"
+
+        val service = ChatService()
+
+        service.createMessage(ownerId = ownerId, recipientId = recipientId, text = text)
+        val result = service.createMessage(ownerId = recipientId, recipientId = ownerId, text = text2)
+
+        assertTrue(result)
+    }
+
+
+    @Test
+    fun createMessageChatDontExistYet() {
         val ownerId = 1
         val recipientId = 2
         val text = "Some text"
@@ -185,19 +217,21 @@ class ChatServiceTest {
         assertTrue(result)
     }
 
-//    @Test(expected = NotFoundException::class)
-//    fun readMessageNotFoundException() {
-//        val ownerId = 1
-//        val recipientId = 2
-//        val text = "Some text"
-//        val messageId = 25
-//        val userId = 1
-//
-//        val service = ChatService()
-//        service.createMessage(ownerId = ownerId, recipientId = recipientId, text = text)
-//
-//       service.readMessage(messageId, userId)
-//
-//    }
+    @Test(expected = NotFoundException::class)
+    fun readMessageNotFoundException() {
+        val ownerId = 1
+        val recipientId = 2
+        val text = "Some text"
+        val messageId = 25
+        val userId = 25
+
+        val service = ChatService()
+        service.createMessage(ownerId = ownerId, recipientId = recipientId, text = text)
+        service.readMessage(messageId, userId)
+
+    }
+
+
+
 
 }
