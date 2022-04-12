@@ -58,10 +58,9 @@ class ChatService {
     private fun MutableList<Chat>.findMessageById(messageId: Int): Pair<Chat, Message>? {
         forEach { chat ->
             chat.messages.forEach { message ->
-                if (message.messageId == messageId) {
-                    return chat to message
-                }
-            }
+                run { message.messageId == messageId }
+                return chat to message
+              }
         }
         return null
     }
