@@ -136,7 +136,7 @@ class ChatServiceTest {
     }
 
     @Test
-    fun getUnreadChatsCount_userOwner() {
+    fun getUnreadChatsCountForUserWithoutMessages() {
         val ownerId1 = 1
         val ownerId2 = 3
         val recipientId1 = 2
@@ -169,5 +169,35 @@ class ChatServiceTest {
         assertTrue(result)
     }
 
+    @Test
+    fun readMessage() {
+        val ownerId = 1
+        val recipientId = 2
+        val text = "Some text"
+        val messageId = 1
+        val userId = 1
+
+        val service = ChatService()
+        service.createMessage(ownerId = ownerId, recipientId = recipientId, text = text)
+
+        val result = service.readMessage(messageId, userId)
+
+        assertTrue(result)
+    }
+
+//    @Test(expected = NotFoundException::class)
+//    fun readMessageNotFoundException() {
+//        val ownerId = 1
+//        val recipientId = 2
+//        val text = "Some text"
+//        val messageId = 25
+//        val userId = 1
+//
+//        val service = ChatService()
+//        service.createMessage(ownerId = ownerId, recipientId = recipientId, text = text)
+//
+//       service.readMessage(messageId, userId)
+//
+//    }
 
 }
